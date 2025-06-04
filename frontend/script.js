@@ -1,4 +1,4 @@
-fetch('posts.json')
+fetch('http://localhost:5000/api/posts')
   .then(resp => resp.json())
   .then(data => {
     const container = document.getElementById('posts');
