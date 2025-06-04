@@ -22,6 +22,7 @@ If you prefer running with the `flask` command, set `FLASK_APP=backend.app` and
 run `flask run`.
 
 The app will create a SQLite database (`blog.db`) on first run. A default admin user `admin` with password `admin` is created for demonstration purposes.
+Log in at `http://localhost:5000/admin/login` to access the dashboard.
 
 ### Deployment
 
