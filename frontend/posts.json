@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "title": "Welcome to the AI Health Blog",
+    "content": "<p>This demo shows how AI can transform hygiene and medical research.</p>",
+    "created_at": "2024-01-01"
+  },
+  {
+    "id": 2,
+    "title": "Getting Started with Machine Learning",
+    "content": "<p>Learn the basics of building ML models for health applications.</p>",
+    "created_at": "2024-01-15"
+  }
+]
