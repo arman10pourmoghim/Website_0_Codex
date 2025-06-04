@@ -1,4 +1,5 @@
-fetch('http://localhost:5000/api/posts')
+// Fetch posts from the backend API relative to the current domain
+fetch('/api/posts')
   .then(resp => resp.json())
   .then(data => {
     const container = document.getElementById('posts');

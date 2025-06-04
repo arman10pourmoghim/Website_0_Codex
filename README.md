@@ -17,6 +17,10 @@ pip install -r backend/requirements.txt
 python backend/app.py
 ```
 
+The server will automatically initialize the SQLite database on first request. 
+If you prefer running with the `flask` command, set `FLASK_APP=backend.app` and 
+run `flask run`.
+
 The app will create a SQLite database (`blog.db`) on first run. A default admin user `admin` with password `admin` is created for demonstration purposes.
 
 ### Deployment

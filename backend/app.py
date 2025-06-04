@@ -106,7 +106,9 @@ def delete_post(post_id):
     db.session.commit()
     return redirect(url_for('admin_dashboard'))
 
+with app.app_context():
+    # Ensure database and default admin exist even when running with `flask run`
+    init_db()
+
 if __name__ == '__main__':
-    with app.app_context():
-        init_db()
     app.run(debug=True)
