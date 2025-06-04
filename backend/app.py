@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session, abort
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
+import secrets
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'secret-key')
@@ -10,6 +11,23 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+
+def generate_csrf_token():
+    """Return a session-stored CSRF token, generating one if needed."""
+    if '_csrf_token' not in session:
+        session['_csrf_token'] = secrets.token_hex(16)
+    return session['_csrf_token']
+
+
+def validate_csrf():
+    token = session.get('_csrf_token')
+    form_token = request.form.get('csrf_token')
+    if not token or not form_token or token != form_token:
+        abort(400)
+
+
+app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -63,6 +81,7 @@ def post_detail(post_id):
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
+        validate_csrf()
         username = request.form['username']
         password = request.form['password']
         admin = Admin.query.filter_by(username=username).first()
@@ -89,6 +108,7 @@ def new_post():
     if not session.get('admin'):
         return redirect(url_for('admin_login'))
     if request.method == 'POST':
+        validate_csrf()
         title = request.form['title']
         content = request.form['content']
         post = Post(title=title, content=content)
@@ -101,6 +121,7 @@ def new_post():
 def delete_post(post_id):
     if not session.get('admin'):
         return redirect(url_for('admin_login'))
+    validate_csrf()
     post = Post.query.get_or_404(post_id)
     db.session.delete(post)
     db.session.commit()
@@ -110,3 +131,4 @@ if __name__ == '__main__':
     with app.app_context():
         init_db()
     app.run(debug=True)
+
